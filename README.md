@@ -5,7 +5,6 @@ Dự án Web Application đặt đồ ăn trực tuyến (Food Delivery) đượ
 ## ✨ Tính năng nổi bật
 
 * **🏪 Mô hình Đa nhà hàng (Multi-vendor):** Hỗ trợ nhiều quán ăn/nhà hàng đăng ký kinh doanh trên cùng một nền tảng. Mỗi món ăn được gắn liền với một cửa hàng cụ thể.
-* **📍 Định vị & Gợi ý địa chỉ thật (Smart Autocomplete):** Tích hợp API của **OpenStreetMap (Nominatim)** để tìm kiếm và gợi ý địa chỉ giao hàng thực tế tại Việt Nam mà không tốn phí API (Thay thế cho Google Maps).
 * **🛒 Quản lý Option món ăn phức tạp:** Hỗ trợ cấu trúc dữ liệu cho phép một món ăn có nhiều tùy chọn (Ví dụ: Size M/L, Topping, Mức đường, Mức đá).
 * **🛵 Quản lý Trạng thái Đơn hàng:** Luồng xử lý đơn hàng rõ ràng: `Chờ xác nhận` -> `Đang chuẩn bị` -> `Đang giao (Kèm thông tin Shipper)` -> `Hoàn thành`.
 * **💻 Kiến trúc MVC rõ ràng:** Backend tách biệt hoàn toàn với Frontend, giao tiếp thông qua RESTful API kết hợp chuẩn bảo mật PDO chống SQL Injection.
