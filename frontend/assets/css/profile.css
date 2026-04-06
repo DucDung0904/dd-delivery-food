@@ -1,0 +1,145 @@
+/* --- CẤU TRÚC CHUNG --- */
+.profile-page {
+  background-color: #f5f5f5; /* Màu nền xám nhạt cho toàn trang để nổi bật các thẻ Card */
+  min-height: 100vh;
+  padding-bottom: 50px;
+}
+
+/* --- THẺ CARD (KHUNG CHỨA) --- */
+.profile-page .card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ tạo độ nổi */
+  margin-bottom: 20px;
+  overflow: hidden; /* Để bo góc không bị đè */
+}
+
+.profile-page .card-header {
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+  padding: 15px 20px;
+  display: flex; /* Dùng flex để căn chỉnh tiêu đề và nút */
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-page .card-body {
+  padding: 20px;
+}
+
+/* --- FORM INPUT --- */
+.profile-page .form-group label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #555;
+  font-size: 14px;
+}
+
+.profile-page .form-control {
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.profile-page .form-control:focus {
+  border-color: #0d6efd; /* Màu xanh chủ đạo của web bạn */
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.profile-page .form-control:disabled {
+  background-color: #f9f9f9;
+  color: #888;
+}
+
+/* --- DANH SÁCH ĐỊA CHỈ --- */
+#address-list .list-group-item {
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+  border-radius: 8px !important; /* Ghi đè bootstrap */
+  padding: 15px;
+  transition: all 0.2s;
+  background-color: #fff;
+}
+
+/* Hiệu ứng khi di chuột vào địa chỉ */
+#address-list .list-group-item:hover {
+  border-color: #0d6efd;
+  background-color: #f0f7ff; /* Xanh cực nhạt */
+}
+
+/* Text địa chỉ cụ thể */
+#address-list strong {
+  color: #333;
+  font-size: 15px;
+}
+
+/* Text địa chỉ phường/xã */
+#address-list small {
+  display: block;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  color: #777;
+}
+
+/* --- BADGE MẶC ĐỊNH --- */
+/* Style cho chữ "Mặc định" màu xanh lá */
+.badge.bg-success {
+  background-color: #e8f5e9 !important; /* Nền xanh lá nhạt */
+  color: #2e7d32; /* Chữ xanh lá đậm */
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid #c8e6c9;
+}
+
+/* --- FORM THÊM ĐỊA CHỈ (ẨN/HIỆN) --- */
+#add-address-form {
+  background-color: #fcfcfc;
+  border-bottom: 2px dashed #eee;
+  padding: 20px;
+}
+
+#add-address-form h6 {
+  color: #0d6efd;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* --- NÚT BẤM (BUTTONS) --- */
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  font-weight: 500;
+}
+
+.btn-outline-danger {
+  border-width: 1px;
+}
+
+.btn-link {
+  text-decoration: none;
+  font-size: 13px;
+  color: #0d6efd;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive cho Mobile */
+@media (max-width: 768px) {
+  .profile-page .col-md-4 {
+    margin-bottom: 20px; /* Tách cột thông tin và cột địa chỉ trên mobile */
+  }
+
+  #add-address-form .col-4 {
+    width: 100%; /* Select box full chiều rộng trên mobile */
+    margin-bottom: 10px;
+  }
+}

@@ -1,0 +1,459 @@
+/* =========================================
+   1. VARIABLES & RESET
+   ========================================= */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap");
+
+:root {
+  /* --- BẢNG MÀU LIGHT MODE --- */
+  --bg-body: #f4f7fe; /* Nền tổng thể */
+  --bg-white: #ffffff; /* Nền các khối card */
+  --primary: #4318ff; /* Màu tím xanh chủ đạo */
+  --primary-hover: #3311db;
+
+  --text-main: #2b3674; /* Màu chữ chính (Navy đậm) */
+  --text-gray: #a3aed0; /* Màu chữ phụ (Xám) */
+  --border-color: #e0e5f2; /* Màu đường viền */
+
+  /* --- MÀU TRẠNG THÁI --- */
+  --success: #05cd99;
+  --warning: #ffad62;
+  --danger: #ee5d50;
+  --info: #33a1fd;
+
+  /* --- KÍCH THƯỚC --- */
+  --sidebar-width: 280px;
+  --header-height: 80px;
+  --card-radius: 20px;
+
+  /* --- HIỆU ỨNG --- */
+  --shadow-sm: 0px 2px 6px rgba(10, 20, 50, 0.02);
+  --shadow-card: 0px 18px 40px rgba(112, 144, 176, 0.12); /* Đổ bóng cao cấp */
+  --transition: all 0.3s ease-in-out;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Wrapper bao quanh */
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+
+/* =========================================
+   2. SIDEBAR (THANH BÊN TRÁI)
+   ========================================= */
+#sidebar {
+  min-width: var(--sidebar-width);
+  max-width: var(--sidebar-width);
+  background: var(--bg-white);
+  border-right: 1px solid white;
+  z-index: 1000;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-header {
+  padding: 35px 30px 20px 30px;
+}
+
+.sidebar-header h3 {
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+}
+
+/* Nhóm Menu */
+.menu-label {
+  padding: 20px 30px 10px 30px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Links Menu */
+#sidebar ul li a {
+  padding: 14px 30px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-gray);
+  display: flex;
+  align-items: center;
+  border-right: 4px solid transparent;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+#sidebar ul li a i {
+  width: 24px;
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+/* Hover & Active State */
+#sidebar ul li a:hover,
+#sidebar ul li.active a {
+  color: var(--text-main);
+  font-weight: 700;
+  background: rgba(67, 24, 255, 0.04);
+  border-right-color: var(--primary);
+}
+#sidebar ul li.active a i {
+  color: var(--primary);
+}
+
+/* =========================================
+   3. MAIN CONTENT
+   ========================================= */
+#content {
+  width: 100%;
+  margin-left: var(--sidebar-width);
+  padding: 30px;
+  min-height: 100vh;
+  transition: var(--transition);
+}
+
+/* Topbar & Profile */
+.page-title {
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 30px;
+  margin-bottom: 0;
+}
+
+.profile-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-white);
+  padding: 6px 20px 6px 6px;
+  border-radius: 40px;
+  box-shadow: var(--shadow-sm);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #868cff 0%, #4318ff 100%);
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.profile-info .name {
+  font-weight: 700;
+  font-size: 14px;
+  display: block;
+}
+.profile-info .role {
+  font-size: 11px;
+  color: var(--text-gray);
+}
+
+/* =========================================
+   4. DASHBOARD CARDS (THẺ THỐNG KÊ)
+   ========================================= */
+.card {
+  border: none;
+  border-radius: var(--card-radius);
+  background: var(--bg-white);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-card {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* Utility Colors cho Icon (Light Backgrounds) */
+.bg-blue,
+.bg-primary-soft {
+  background: rgba(67, 24, 255, 0.1);
+  color: var(--primary);
+}
+.bg-green,
+.bg-success-soft {
+  background: rgba(5, 205, 153, 0.1);
+  color: var(--success);
+}
+.bg-purple,
+.bg-warning-soft {
+  background: rgba(255, 173, 98, 0.1);
+  color: var(--warning);
+} /* (Lưu ý: purple ở đây map tạm sang cam để giống hình, bạn có thể đổi màu hex) */
+.bg-orange,
+.bg-danger-soft {
+  background: rgba(238, 93, 80, 0.1);
+  color: var(--danger);
+}
+
+/* Utility cho Text */
+.text-success {
+  color: var(--success) !important;
+}
+.text-warning {
+  color: var(--warning) !important;
+}
+.text-danger {
+  color: var(--danger) !important;
+}
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.stat-content p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-gray);
+  font-weight: 500;
+}
+.stat-content h3 {
+  margin: 2px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.trend {
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.trend.up {
+  color: var(--success);
+}
+.trend.down {
+  color: var(--danger);
+}
+.trend.flat {
+  color: var(--text-gray);
+}
+
+/* =========================================
+   5. TABLES & LISTS
+   ========================================= */
+.table-responsive {
+  padding: 5px;
+} /* Fix bóng đổ bị cắt */
+
+.custom-table th {
+  background: #f9fafc;
+  color: var(--text-gray);
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  border: none;
+  padding: 15px 20px;
+}
+
+.custom-table td {
+  padding: 15px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  border-bottom: 1px solid #f4f7fe;
+  vertical-align: middle;
+}
+
+/* Badges trạng thái */
+.badge {
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 11px;
+}
+.bg-success {
+  background: #e6fffa !important;
+  color: #059669;
+}
+.bg-warning {
+  background: #fff7ed !important;
+  color: #c2410c;
+}
+.bg-danger {
+  background: #fef2f2 !important;
+  color: #dc2626;
+}
+
+/* Top Products List */
+.top-product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #f4f7fe;
+}
+.top-product-item h6 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.top-product-item small {
+  font-size: 12px;
+  color: var(--text-gray);
+}
+.sales-badge {
+  background: rgba(67, 24, 255, 0.05);
+  color: var(--primary);
+  padding: 5px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* =========================================
+   6. MODAL & FORMS
+   ========================================= */
+.modal-content {
+  border: none;
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+}
+.modal-header {
+  border-bottom: 1px solid var(--border-color);
+}
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  padding: 10px 15px;
+  font-size: 14px;
+  background: #f9fafc;
+}
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(67, 24, 255, 0.1);
+  background: #fff;
+}
+
+.btn-primary {
+  background: var(--primary);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   7. SPA ANIMATION (CHUYỂN TAB)
+   ========================================= */
+.content-view {
+  display: none;
+}
+.content-view.active {
+  display: block;
+  animation: slideUpFade 0.4s ease-out forwards;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   8. RESPONSIVE (MOBILE)
+   ========================================= */
+@media (max-width: 991px) {
+  #sidebar {
+    margin-left: calc(var(--sidebar-width) * -1);
+  }
+  #sidebar.active {
+    margin-left: 0;
+  }
+  #content {
+    margin-left: 0;
+    width: 100%;
+    padding: 15px;
+  }
+  .page-title {
+    font-size: 24px;
+  }
+
+  /* Overlay khi mở menu trên mobile */
+  #sidebar.active + #content::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 998;
+  }
+}
+.content-view {
+  display: none; /* Mặc định ẩn tất cả các tab */
+}
+
+.content-view.active {
+  display: block; /* Chỉ hiện tab có class active */
+}
+
+/* Màu sắc trạng thái đơn hàng */
+.badge-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+.badge-completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+.badge-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}

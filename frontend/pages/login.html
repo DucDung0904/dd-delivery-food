@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - SeaFood</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <style>
+      /* GIỮ NGUYÊN CSS CŨ CỦA BẠN (Đã ẩn bớt cho gọn) */
+      body {
+        background: linear-gradient(135deg, #e0ecff 0%, #f4f7ff 100%);
+        min-height: 100vh;
+      }
+      .auth-page-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .auth-card {
+        background: #ffffff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(15, 23, 42, 0.2);
+        max-width: 1000px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 600px;
+      }
+      .auth-banner {
+        background: linear-gradient(135deg, #007bff 0%, #0056d6 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+      }
+      .auth-banner::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: url("https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=800&fit=crop")
+          center/cover;
+        opacity: 0.15;
+        animation: float 20s infinite ease-in-out;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) rotate(0deg);
+        }
+        50% {
+          transform: translate(-30px, -30px) rotate(5deg);
+        }
+      }
+      .auth-banner-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+      }
+      .auth-banner-content i {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.9;
+      }
+      .auth-banner-content h2 {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 12px;
+      }
+      .auth-banner-content p {
+        font-size: 16px;
+        opacity: 0.9;
+        line-height: 1.6;
+      }
+      .auth-form-wrapper {
+        padding: 50px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .auth-form-header {
+        margin-bottom: 32px;
+      }
+      .auth-form-header h1 {
+        font-size: 28px;
+        color: #111827;
+        margin-bottom: 8px;
+        font-weight: 800;
+      }
+      .auth-form-header p {
+        color: #6b7280;
+        font-size: 14px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+      }
+      .form-group label i {
+        color: var(--primary-color, #007bff);
+        width: 18px;
+        text-align: center;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        font-family: inherit;
+      }
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color, #007bff);
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+      }
+      .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        font-size: 13px;
+      }
+      .form-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .form-checkbox input {
+        width: auto;
+        margin: 0;
+      }
+      .form-link {
+        color: var(--primary-color, #007bff);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .form-link:hover {
+        text-decoration: underline;
+      }
+      .btn-auth {
+        width: 100%;
+        padding: 14px;
+        background: var(--primary-color, #007bff);
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.2s, box-shadow 0.2s, transform 0.15s;
+        box-shadow: 0 12px 24px rgba(37, 99, 235, 0.35);
+      }
+      .btn-auth:hover {
+        background: var(--primary-hover, #0056d6);
+        box-shadow: 0 16px 40px rgba(37, 99, 235, 0.45);
+        transform: translateY(-1px);
+      }
+      .auth-divider {
+        display: flex;
+        align-items: center;
+        margin: 24px 0;
+        color: #9ca3af;
+        font-size: 13px;
+      }
+      .auth-divider::before,
+      .auth-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+      }
+      .auth-divider span {
+        padding: 0 12px;
+      }
+      .auth-footer {
+        text-align: center;
+        margin-top: 24px;
+        font-size: 14px;
+        color: #6b7280;
+      }
+      .auth-footer a {
+        color: var(--primary-color, #007bff);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .auth-footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 768px) {
+        .auth-card {
+          grid-template-columns: 1fr;
+        }
+        .auth-banner {
+          display: none;
+        }
+        .auth-form-wrapper {
+          padding: 40px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-page-container">
+      <div class="auth-card">
+        <div class="auth-banner">
+          <div class="auth-banner-content">
+            <i class="fas fa-utensils"></i>
+            <h2>Chào mừng trở lại!</h2>
+            <p>Đăng nhập để tiếp tục khám phá những món ăn ngon.</p>
+          </div>
+        </div>
+
+        <div class="auth-form-wrapper">
+          <div class="auth-form-header">
+            <h1>Đăng nhập</h1>
+            <p>Nhập thông tin để tiếp tục</p>
+          </div>
+
+          <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+              <label
+                ><i class="fas fa-envelope"></i> Email hoặc số điện thoại</label
+              >
+              <input
+                type="text"
+                id="loginInput"
+                placeholder="Nhập email hoặc số điện thoại"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> Mật khẩu</label>
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="Nhập mật khẩu"
+                required
+              />
+            </div>
+
+            <div class="form-options">
+              <label class="form-checkbox">
+                <input type="checkbox" />
+                <span>Ghi nhớ đăng nhập</span>
+              </label>
+              <a href="#" class="form-link">Quên mật khẩu?</a>
+            </div>
+
+            <button type="submit" class="btn-auth">Đăng nhập</button>
+          </form>
+
+          <div class="auth-divider"><span>Hoặc</span></div>
+          <div class="auth-footer">
+            Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a>
+          </div>
+          <div class="auth-footer" style="margin-top: 12px">
+            <a href="../index.html"
+              ><i class="fas fa-arrow-left"></i> Quay lại trang chủ</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../assets/js/login.js"></script>
+  </body>
+</html>

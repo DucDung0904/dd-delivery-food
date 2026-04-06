@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DD-FOOD - Đặt món trực tuyến</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/cart.css" />
+  </head>
+  <body>
+    <header class="top-header">
+      <div class="header-left">
+        <a href="#" class="logo">
+          <i class="fas fa-location-arrow"></i> DD-FOOD
+        </a>
+        <nav class="main-nav">
+          <a href="#restaurants">Nhà hàng</a>
+          <a href="#why">Vì sao nên order?</a>
+          <a href="#faq">Câu hỏi thường gặp</a>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <button class="btn-outline small">VI</button>
+
+        <button id="cart-btn" class="cart-btn" aria-label="Giỏ hàng">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cart-badge" class="cart-badge" aria-hidden="true">0</span>
+        </button>
+
+        <div id="guest-actions" style="display: flex; gap: 10px">
+          <a href="pages/login.html" class="btn-outline">Đăng nhập</a>
+          <a href="pages/register.html" class="btn-primary">Đăng ký</a>
+        </div>
+
+        <div id="user-actions" class="user-dropdown-container">
+          <div class="user-info" onclick="toggleUserMenu()">
+            <div class="user-avatar">U</div>
+            <span id="display-username" class="user-name">User</span>
+            <i
+              class="fas fa-caret-down"
+              style="font-size: 12px; color: #666"
+            ></i>
+          </div>
+
+          <div id="user-dropdown" class="dropdown-menu">
+            <ul class="dropdown-list">
+              <li>
+                <a href="pages/profile.html?tab=info"
+                  ><i class="fas fa-user-circle"></i> Hồ sơ</a
+                >
+              </li>
+              <li>
+                <a href="pages/tracking.html?tab=orders"
+                  ><i class="fas fa-receipt"></i> Đơn mua</a
+                >
+              </li>
+              <li>
+                <a href="pages/profile.html?tab=address"
+                  ><i class="fas fa-map-marker-alt"></i> Địa chỉ</a
+                >
+              </li>
+              <li class="divider"></li>
+              <li>
+                <a href="#" onclick="logout()" class="text-danger"
+                  ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-banner">
+        <div class="hero-background"></div>
+        <div class="hero-overlay">
+          <div class="hero-content-wrapper">
+            <div class="banner-content">
+              <p class="greeting">Good Morning</p>
+              <h1>Where should we deliver your food today?</h1>
+              <p class="subtitle">
+                Đặt đồ ăn từ quán yêu thích quanh bạn với vài thao tác đơn giản.
+              </p>
+
+              <div class="location-search-box">
+                <label>Địa chỉ giao hàng</label>
+                <div class="input-group">
+                  <i class="fas fa-map-marker-alt location-icon"></i>
+                  <input
+                    type="text"
+                    id="address-input"
+                    placeholder="Nhập địa chỉ của bạn..."
+                    autocomplete="off"
+                  />
+                  <button
+                    class="gps-btn"
+                    onclick="getCurrentLocation()"
+                    title="Lấy vị trí hiện tại"
+                  >
+                    <i class="fas fa-crosshairs"></i>
+                  </button>
+                </div>
+                <ul id="address-suggestions" class="suggestions-list"></ul>
+                <button class="btn-primary full-width">Tìm món gần bạn</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="restaurants" class="restaurant-section my-5">
+        <div class="container">
+          <div class="section-header mb-4">
+            <h2>Curated restaurants</h2>
+            <p class="text-muted">
+              Từ bữa lót dạ đến bữa no nê, hãy để chúng tôi gợi ý những quán ăn
+              phù hợp nhất quanh bạn.
+            </p>
+          </div>
+
+          <div class="horizontal-scroll-container position-relative">
+            <button class="scroll-btn prev-btn" onclick="scrollRestaurants(-1)">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div id="restaurant-list" class="horizontal-list">
+              <div class="loading w-100 text-center py-5">
+                <i class="fas fa-spinner fa-spin text-primary fs-3"></i
+                ><br />Đang tải dữ liệu...
+              </div>
+            </div>
+
+            <button class="scroll-btn next-btn" onclick="scrollRestaurants(1)">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <div class="see-all-container">
+            <a href="pages/all-restaurants.html" class="btn-see-all">
+              See all promotions<i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="categories-section">
+        <div class="categories-banner">
+          <h2>There's something for everyone!</h2>
+        </div>
+        <div class="category-grid">
+          <div class="category-item">
+            <img
+              src="assets/images/banhmy.webp"
+              onerror="this.src='https://via.placeholder.com/150'"
+              alt="Bánh Mì"
+            />
+            <h3>Bánh Mì</h3>
+          </div>
+          <div class="category-item">
+            <img
+              src="assets/images/garan.webp"
+              onerror="this.src='https://via.placeholder.com/150'"
+              alt="Gà rán"
+            />
+            <h3>Gà rán</h3>
+          </div>
+          <div class="category-item">
+            <img
+              src="assets/images/com.jpg"
+              alt="Cơm gà"
+            />
+            <h3>Cơm gà</h3>
+          </div>
+          <div class="category-item">
+            <img
+              src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=400&fit=crop"
+              alt="Pizza"
+            />
+            <h3>Pizza</h3>
+          </div>
+          <div class="category-item">
+            <img
+              src="assets/images/miy.jpg"
+              alt="Mì Ý"
+            />
+            <h3>Mì Ý</h3>
+          </div>
+          <div class="category-item">
+            <img
+              src="assets/images/comtam.jpg"
+              alt="Cơm tấm"
+            />
+            <h3>Cơm tấm</h3>
+          </div>
+          <div class="category-item">
+            <img
+              src="assets/images/trasua.jpg"
+              alt="Trà sữa"
+            />
+            <h3>Trà sữa</h3>
+          </div>
+          <div class="category-item">
+            <img
+              src="assets/images/haisan.webp"
+              alt="Hải sản"
+            />
+            <h3>Hải sản</h3>
+          </div>
+        </div>
+      </section>
+
+      <section id="why" class="why-section">
+        <h2>Vì sao bạn nên Order trên SeaFood?</h2>
+        <ul class="why-list">
+          <li>
+            <span class="why-icon"><i class="fas fa-check"></i></span>
+            <p><strong>Nhanh nhất</strong> - Giao hàng thần tốc.</p>
+          </li>
+          <li>
+            <span class="why-icon"><i class="fas fa-check"></i></span>
+            <p><strong>Dễ dàng nhất</strong> - Thao tác đơn giản.</p>
+          </li>
+          <li>
+            <span class="why-icon"><i class="fas fa-check"></i></span>
+            <p><strong>Đa dạng</strong> - Đáp ứng mọi khẩu vị.</p>
+          </li>
+          <li>
+            <span class="why-icon"><i class="fas fa-check"></i></span>
+            <p>
+              <strong>Thanh toán tiện lợi</strong> - Tiền mặt hoặc chuyển khoản.
+            </p>
+          </li>
+          <li>
+            <span class="why-icon"><i class="fas fa-check"></i></span>
+            <p><strong>Nhiều ưu đãi</strong> - Tích điểm nhận quà.</p>
+          </li>
+        </ul>
+      </section>
+
+      <section id="faq" class="faq-section">
+        <h2>Câu hỏi thường gặp</h2>
+        <div class="faq-list">
+          <details open>
+            <summary>DD-FOOD là gì?</summary>
+            <p>Nền tảng giao đồ ăn kết nối bạn với hàng nghìn quán ăn ngon.</p>
+          </details>
+          <details>
+            <summary>Làm thế nào để đặt món?</summary>
+            <p>Chọn món -> Thêm vào giỏ -> Nhập địa chỉ -> Đặt hàng.</p>
+          </details>
+          <details>
+            <summary>Thời gian giao hàng?</summary>
+            <p>Từ 7:00 - 22:00 mỗi ngày.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-inner">
+        <div class="footer-col">
+          <h4>Về DD-FOOD</h4>
+          <a href="#">Giới thiệu</a><a href="#">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Hỗ trợ</h4>
+          <a href="#faq">Trung tâm trợ giúp</a><a href="#">Chính sách</a>
+        </div>
+        <div class="footer-col">
+          <h4>Đối tác</h4>
+          <a href="#">Mở quán</a><a href="#">Đăng ký tài xế</a>
+        </div>
+      </div>
+      <p class="footer-bottom">© 2025 DD-Food. Developed by Tran Duc Dung.</p>
+    </footer>
+
+    <div id="cart-overlay" class="cart-overlay" onclick="Cart.close()"></div>
+
+    <aside id="cart-panel" class="cart-panel">
+      <div class="cart-header">
+        <h3><i class="fas fa-shopping-basket"></i> Giỏ hàng</h3>
+        <button class="close-cart-btn" onclick="Cart.close()">&times;</button>
+      </div>
+
+      <div id="cart-items" class="cart-body"></div>
+
+      <div id="empty-cart-msg" style="display: none">
+        <i class="fas fa-shopping-basket"></i>
+        <p>Giỏ hàng của bạn đang trống</p>
+        <button class="btn-continue" onclick="Cart.close()">
+          Thêm món ngay
+        </button>
+      </div>
+
+      <div id="cart-footer" class="cart-footer" style="display: none">
+        <div class="cart-total-row">
+          <span>Tổng:</span> <span id="cart-total" class="total-price">0₫</span>
+        </div>
+        <a href="pages/checkout.html" class="btn-checkout" style="text-decoration: none; display: inline-block; text-align: center;">
+    Đặt món ngay
+</a>
+    </aside>
+
+    <div id="checkout-modal" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Xác nhận đặt hàng</h3>
+          <button onclick="closeCheckout()" class="close-btn">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-section">
+            <label><strong>Giao đến:</strong></label>
+            <select
+              id="saved-address-select"
+              class="form-control"
+              onchange="toggleAddressInput()"
+            >
+              <option value="new">-- Nhập địa chỉ mới --</option>
+            </select>
+            <div id="new-address-group" style="margin-top: 10px">
+              <input
+                type="text"
+                id="checkout-address"
+                class="form-control"
+                placeholder="Nhập địa chỉ giao hàng..."
+              />
+            </div>
+          </div>
+
+          <div class="form-section" style="margin-top: 15px">
+            <label><strong>Số điện thoại:</strong></label>
+            <input
+              type="text"
+              id="checkout-phone"
+              class="form-control"
+              placeholder="Nhập số điện thoại..."
+            />
+          </div>
+
+          <div class="form-section" style="margin-top: 15px">
+            <label>Ghi chú:</label>
+            <input
+              type="text"
+              id="checkout-note"
+              class="form-control"
+              placeholder="VD: Không gọi chuông..."
+            />
+          </div>
+
+          <div
+            class="order-summary"
+            style="
+              margin-top: 20px;
+              background: #f9f9f9;
+              padding: 10px;
+              border-radius: 8px;
+            "
+          >
+            <p><strong>Quán:</strong> <span id="checkout-res-name"></span></p>
+            <p>
+              <strong>Tổng tiền:</strong>
+              <span
+                id="checkout-total"
+                style="color: #d32f2f; font-weight: bold"
+                >0đ</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button onclick="submitOrder()" class="btn-primary full-width">
+            ĐẶT ĐƠN NGAY
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/cart.js"></script>
+  </body>
+</html>

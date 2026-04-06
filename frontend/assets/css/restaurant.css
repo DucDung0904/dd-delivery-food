@@ -1,0 +1,492 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* --- 1. CẤU HÌNH BIẾN MÀU & HIỆU ỨNG (Global Variables) --- */
+:root {
+  /* Màu nền Gradient nhẹ (Tạo chiều sâu cho hiệu ứng kính) */
+  --bg-body: linear-gradient(135deg, #f0f2f5 0%, #e6e9f0 100%);
+
+  --bg-white: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+
+  /* Màu chủ đạo Gradient (Indigo) */
+  --primary: #4f46e5;
+  --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  --primary-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.4);
+
+  --border-color: #e2e8f0;
+  --danger: #ef4444;
+  --danger-gradient: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+  --success: #10b981;
+  --success-gradient: linear-gradient(135deg, #34d399 0%, #059669 100%);
+
+  --radius: 16px; /* Bo góc mềm mại hơn */
+
+  /* Hiệu ứng Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+  --backdrop-blur: blur(12px);
+
+  /* Bóng đổ mềm (Soft Shadow) */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.05);
+  --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  background: var(--bg-body);
+  color: var(--text-main);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* --- 2. SIDEBAR (Hiệu ứng kính mờ) --- */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.85); /* Nền kính */
+  backdrop-filter: var(--backdrop-blur); /* Mờ hậu cảnh */
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border-right: 1px solid rgba(255, 255, 255, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 24px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.03);
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  padding-left: 10px;
+  letter-spacing: -0.5px;
+}
+
+.nav-item {
+  margin-bottom: 6px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  color: var(--text-muted);
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hiệu ứng hover cho menu */
+.nav-link:hover {
+  background-color: rgba(99, 102, 241, 0.08);
+  color: var(--primary);
+  transform: translateX(4px);
+}
+
+/* Hiệu ứng Active: Gradient + Shadow màu */
+.nav-link.active {
+  background: var(--primary-gradient);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--primary-shadow);
+}
+
+.nav-link i {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.logout-btn {
+  margin-top: auto;
+  color: var(--danger);
+}
+.logout-btn:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+  transform: none;
+}
+
+/* --- 3. MAIN CONTENT --- */
+.main-content {
+  margin-left: 260px;
+  padding: 30px 40px;
+}
+
+/* Header */
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.page-title h2 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+/* Trạng thái mở cửa */
+.status-badge {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Avatar User */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 50px;
+  transition: 0.2s;
+}
+.user-profile:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* --- 4. TABS & MENU (Style dạng lơ lửng) --- */
+.sub-nav-container {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 5px;
+  border-radius: 14px;
+  display: inline-flex;
+  gap: 5px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.sub-nav-item {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid transparent;
+}
+
+.sub-nav-item:hover {
+  color: var(--primary);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.sub-nav-item.active {
+  background: #fff;
+  color: var(--primary);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-color: transparent;
+}
+
+/* --- 5. CARDS & STATS (Modern Cards) --- */
+.modern-card,
+.stat-card,
+.content-section,
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: var(--glass-border);
+  box-shadow: var(--shadow-md);
+  padding: 24px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modern-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* --- 6. TAB SHIPPER (Style đặc biệt: Floating Rows) --- */
+
+/* Khung chứa bảng Shipper */
+#tab-shippers .card {
+  background: rgba(255, 255, 255, 0.5); /* Nền trong suốt hơn */
+  padding: 0; /* Bỏ padding để bảng tràn viền */
+  overflow: hidden;
+}
+
+#tab-shippers .card-body {
+  padding: 20px;
+}
+
+/* Cấu trúc bảng */
+#tab-shippers .table {
+  border-collapse: separate;
+  border-spacing: 0 12px; /* Tách các hàng ra */
+  margin-bottom: 0;
+}
+
+/* Header của bảng */
+#tab-shippers .table thead th {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 700;
+  padding-left: 24px;
+  padding-bottom: 5px;
+}
+
+/* Các hàng (Floating Rows) */
+#tab-shippers .table tbody tr {
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: 16px;
+}
+
+/* Hiệu ứng hover vào dòng shipper */
+#tab-shippers .table tbody tr:hover {
+  transform: scale(1.01) translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  background: linear-gradient(to right, #fff, #f8fafc);
+  z-index: 10;
+  position: relative;
+}
+
+/* Bo góc cho dòng */
+#tab-shippers .table tbody td {
+  border: none;
+  padding: 20px 24px;
+  vertical-align: middle;
+}
+#tab-shippers .table tbody td:first-child {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+#tab-shippers .table tbody td:last-child {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+/* Icon Shipper đẹp mắt */
+#tab-shippers .shipper-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-right: 16px;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.15);
+}
+
+/* Tên Shipper */
+#tab-shippers .shipper-name {
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 15px;
+  display: block;
+}
+
+/* Badge trạng thái Shipper (Viên thuốc) */
+#tab-shippers .badge-glass {
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+#tab-shippers .badge-glass.active {
+  background: rgba(209, 250, 229, 0.6);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+#tab-shippers .badge-glass.active::before {
+  content: "";
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #059669;
+  box-shadow: 0 0 8px #059669;
+}
+
+/* Nút Xóa Shipper */
+#tab-shippers .btn-delete-shipper {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: none;
+  background: #fff1f2;
+  color: #f43f5e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+#tab-shippers .btn-delete-shipper:hover {
+  background: var(--danger-gradient);
+  color: white;
+  transform: rotate(10deg) scale(1.1);
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.3);
+}
+
+/* --- 7. BUTTONS (Nút bấm Gradient) --- */
+.btn-primary {
+  background: var(--primary-gradient) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: var(--primary-shadow);
+  padding: 10px 24px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.5);
+  filter: brightness(1.1);
+}
+
+/* --- 8. MODAL & INPUTS --- */
+.modal-content {
+  border-radius: 20px;
+  border: none;
+  overflow: hidden;
+}
+.modal-header {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.form-control,
+.form-select {
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  transition: 0.2s;
+}
+.form-control:focus {
+  background: #fff;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+/* --- SLIDE TO CONFIRM BUTTON --- */
+.swipe-container {
+  position: relative;
+  width: 160px; /* Độ rộng của thanh */
+  height: 40px;
+  background-color: #e9ecef;
+  border-radius: 20px;
+  overflow: hidden;
+  user-select: none; /* Chống bôi đen text khi kéo */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+/* Chữ nền "Vuốt để xong" */
+.swipe-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6c757d;
+  z-index: 1;
+  padding-left: 20px; /* Để tránh bị nút che lúc đầu */
+}
+
+/* Nút tròn để kéo */
+.swipe-handle {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 34px;
+  height: 34px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #198754; /* Màu xanh lá */
+  font-size: 14px;
+  transition: transform 0.1s linear; /* Mượt mà khi kéo */
+}
+
+.swipe-handle:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+/* Lớp màu xanh chạy theo nút */
+.swipe-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0; /* JS sẽ thay đổi cái này */
+  background-color: #198754;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+/* Trạng thái đã hoàn thành */
+.swipe-container.completed {
+  background-color: #198754;
+}
+.swipe-container.completed .swipe-text {
+  color: #fff;
+  content: "Đã xong!";
+}

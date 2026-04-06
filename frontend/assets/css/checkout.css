@@ -1,0 +1,259 @@
+/* --- BIẾN MÀU SẮC (VIVID PALETTE) --- */
+:root {
+  --primary-gradient: linear-gradient(
+    135deg,
+    #0061ff 0%,
+    #60efff 100%
+  ); /* Xanh dương sang Cyan */
+  --secondary-gradient: linear-gradient(
+    135deg,
+    #ff0080 0%,
+    #ff8c00 100%
+  ); /* Hồng sang Cam (Cho điểm nhấn) */
+  --glass-bg: rgba(255, 255, 255, 0.75); /* Màu nền kính (Trắng đục) */
+  --glass-border: rgba(255, 255, 255, 0.6); /* Viền kính */
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* Đổ bóng kính */
+  --text-dark: #1e293b;
+  --text-gray: #64748b;
+  --accent-color: #0d6efd;
+}
+
+/* --- HÌNH NỀN ĐỘNG (ANIMATED BACKGROUND) --- */
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text-dark);
+  background-color: #f0f4f8;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Tạo các quả cầu màu sắc bay bay phía sau */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px); /* Làm mờ cực mạnh để tạo dải màu */
+  z-index: -1;
+  animation: float 10s infinite alternate;
+}
+
+/* Quả cầu 1: Xanh dương */
+body::before {
+  width: 500px;
+  height: 500px;
+  background: #4facfe;
+  top: -10%;
+  left: -10%;
+}
+
+/* Quả cầu 2: Tím hồng */
+body::after {
+  width: 400px;
+  height: 400px;
+  background: #a18cd1;
+  bottom: -10%;
+  right: -10%;
+  animation-delay: -5s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+/* --- GLASSMORPHISM CARD (KHUNG KÍNH) --- */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px); /* Hiệu ứng mờ nền phía sau */
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 20px; /* Bo tròn mạnh hơn */
+  transition: transform 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+/* --- HEADER --- */
+.navbar-glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.brand-gradient {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+/* --- ITEM LIST --- */
+.cart-item-row {
+  background: rgba(255, 255, 255, 0.5); /* Trong suốt nhẹ */
+  border-radius: 12px;
+  margin-bottom: 12px;
+  padding: 15px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.cart-item-row:hover {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border-color: rgba(13, 110, 253, 0.2);
+}
+
+.item-thumb {
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.item-price {
+  color: #ff4757; /* Đỏ dâu tây */
+  font-weight: 700;
+}
+
+/* --- NÚT BẤM HIỆN ĐẠI (GRADIENT BUTTONS) --- */
+.btn-gradient-primary {
+  background: var(--primary-gradient);
+  border: none;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 97, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-primary:hover {
+  background: linear-gradient(135deg, #0056e0 0%, #4dbce9 100%);
+  box-shadow: 0 6px 20px rgba(0, 97, 255, 0.5);
+  transform: translateY(-2px);
+  color: white;
+}
+
+.qty-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: var(--accent-color);
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.qty-btn:hover {
+  background: var(--accent-color);
+  color: white;
+}
+
+/* --- ADDRESS & SUMMARY BOX --- */
+.address-glass-box {
+  background: rgba(13, 110, 253, 0.08); /* Xanh nhạt trong suốt */
+  border: 1px dashed #0d6efd;
+  border-radius: 15px;
+  padding: 15px;
+  position: relative;
+}
+
+.payment-method-item {
+  background: white;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.payment-method-item.active {
+  border-color: #0d6efd;
+  background: rgba(13, 110, 253, 0.05);
+}
+
+.payment-method-item:hover {
+  transform: translateX(5px);
+}
+
+/* --- FORM CONTROL --- */
+.form-glass {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+.form-glass:focus {
+  background: white;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+  border-color: #0d6efd;
+}
+
+/* --- SCROLLBAR --- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #4facfe, #00f2fe);
+  border-radius: 10px;
+}
+
+/* --- SỬA LỖI HÌNH ẢNH (Dựa trên class .item-thumb có sẵn) --- */
+.item-thumb {
+  width: 80px; /* QUAN TRỌNG: Cố định kích thước ảnh */
+  height: 80px; /* Vuông vắn */
+  object-fit: cover; /* Giúp ảnh không bị méo khi bị ép kích thước */
+  border-radius: 12px; /* Giữ nguyên bo góc của bạn */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Giữ bóng đổ của bạn */
+  margin-right: 15px; /* Tạo khoảng cách với chữ */
+}
+
+/* --- SỬA LỖI LAYOUT DÒNG SẢN PHẨM --- */
+.cart-item-row {
+  display: flex; /* Dàn hàng ngang: Ảnh - Tên - Số lượng */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: space-between;
+  /* Các thuộc tính background, border-radius cũ của bạn giữ nguyên */
+}
+
+.item-info {
+  flex-grow: 1; /* Phần chữ chiếm khoảng trống còn lại */
+}
+
+/* --- SỬA Ô INPUT SỐ LƯỢNG (Cho hợp style Glass) --- */
+.qty-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5); /* Nền mờ nhẹ bao quanh cụm nút */
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.qty-input {
+  width: 35px; /* Thu nhỏ chiều rộng ô nhập */
+  text-align: center; /* Số nằm giữa */
+  border: none; /* Bỏ viền xấu */
+  background: transparent; /* Nền trong suốt để lộ màu kính phía sau */
+  font-weight: 700; /* Chữ đậm */
+  color: var(--text-dark);
+  outline: none; /* Bỏ viền xanh khi click vào */
+  -moz-appearance: textfield; /* Ẩn mũi tên mặc định */
+}
+
+/* Ẩn nút tăng giảm mặc định của trình duyệt */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

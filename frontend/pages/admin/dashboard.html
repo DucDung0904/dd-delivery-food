@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - DD Food</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../assets/css/admin.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3><i class="fas fa-utensils text-primary"></i> DD Admin</h3>
+        </div>
+        <ul class="list-unstyled components">
+          <p class="menu-label">TỔNG QUAN</p>
+          <li class="active nav-item" onclick="switchView('dashboard', this)">
+            <a href="#"><i class="fas fa-th-large"></i> Dashboard</a>
+          </li>
+          <p class="menu-label">QUẢN LÝ</p>
+          <li class="nav-item" onclick="switchView('orders', this)">
+            <!-- <a href="#"><i class="fas fa-shopping-cart"></i> Đơn hàng</a> -->
+          </li>
+          <li class="nav-item" onclick="switchView('partners', this)">
+            <a href="#"><i class="fas fa-store"></i> Cửa hàng</a>
+          </li>
+          <li class="nav-item" onclick="switchView('users', this)">
+            <!-- <a href="#"><i class="fas fa-users"></i> Người dùng</a> -->
+          </li>
+          <li class="nav-item" onclick="switchView('feedbacks', this)">
+            <a href="#"><i class="fas fa-headset"></i> Phản hồi</a>
+          </li>
+          <p class="menu-label">HỆ THỐNG</p>
+          <li class="nav-item">
+            <a href="#" onclick="logout()"
+              ><i class="fas fa-sign-out-alt"></i> Đăng xuất</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <div id="content">
+        <nav class="navbar navbar-light bg-transparent mb-4">
+          <div class="container-fluid p-0">
+            <button
+              type="button"
+              id="sidebarCollapse"
+              class="btn btn-primary d-lg-none"
+            >
+              <i class="fas fa-bars"></i>
+            </button>
+            <h4 class="page-title fw-bold" id="page-title">Tổng quan</h4>
+            <div class="ms-auto d-flex align-items-center gap-3">
+              <div class="profile-box d-flex align-items-center gap-2">
+                <div class="avatar bg-primary text-white">A</div>
+                <div class="d-none d-md-block">
+                  <span class="d-block fw-bold name">Admin User</span>
+                  <small class="text-muted role">Super Admin</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+        <div id="view-partners" class="content-view">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5>Quản lý Cửa hàng</h5>
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#modalPartner"
+            >
+              <i class="fas fa-plus me-2"></i> Thêm Cửa Hàng
+            </button>
+          </div>
+          <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+              <table class="table custom-table mb-0 align-middle">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Tên Quán</th>
+                    <th>Địa chỉ</th>
+                    <th>Khu vực</th>
+                    <th>Loại hình</th>
+                    <th>SĐT</th>
+                    <th>Email Chủ</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="partner-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modalPartner" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Thêm Cửa Hàng Mới</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="formPartner" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label class="fw-bold small text-muted">Tên Cửa hàng (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="pStoreName"
+                  name="store_name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="fw-bold small text-muted">Địa chỉ chi tiết</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="pAddress"
+                  name="address"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="fw-bold small text-muted"
+                  >Khu vực (GHN) (*)</label
+                >
+                <div class="row g-2">
+                  <div class="col-md-4">
+                    <select
+                      class="form-select"
+                      id="pProvince"
+                      onchange="loadDistricts(this.value, 'pDistrict', 'pWard')"
+                      required
+                    >
+                      <option value="">-- Tỉnh/Thành --</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select
+                      class="form-select"
+                      id="pDistrict"
+                      onchange="loadWards(this.value, 'pWard')"
+                      required
+                    >
+                      <option value="">-- Quận/Huyện --</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-select" id="pWard" required>
+                      <option value="">-- Phường/Xã --</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="fw-bold small text-muted">Loại hình</label>
+                  <select
+                    class="form-select"
+                    id="pCategory"
+                    name="category_id"
+                    required
+                  ></select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="fw-bold small text-muted"
+                    >Số điện thoại (*)</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="pPhone"
+                    name="phone"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3 border-top pt-3">
+                <label class="fw-bold small text-primary"
+                  >Thông tin đăng nhập</label
+                >
+              </div>
+              <div class="mb-3">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="pEmail"
+                  name="email"
+                  placeholder="Email đăng nhập"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="pPass"
+                  name="password"
+                  value="123456"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="fw-bold small text-muted">Hình ảnh</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="pImage"
+                  name="image"
+                  accept="image/*"
+                  onchange="previewImageAdd(this)"
+                />
+                <div
+                  class="mt-2 text-center"
+                  style="display: none"
+                  id="previewContainer"
+                >
+                  <img
+                    id="previewImage"
+                    src=""
+                    style="
+                      max-height: 150px;
+                      border-radius: 8px;
+                      border: 1px solid #ddd;
+                    "
+                  />
+                </div>
+              </div>
+              <div class="text-end mt-4">
+                <button
+                  type="button"
+                  class="btn btn-light me-2"
+                  data-bs-dismiss="modal"
+                >
+                  Hủy
+                </button>
+                <button type="submit" class="btn btn-primary px-4">
+                  Tạo Cửa Hàng
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalEditPartner"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Chỉnh sửa Cửa Hàng</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-4">
+            <form id="formEditPartner">
+              <input type="hidden" id="editPartnerId" name="id" />
+              <div class="mb-3">
+                <label class="fw-bold small text-muted">Tên Cửa hàng (*)</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editStoreName"
+                  name="store_name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="fw-bold small text-muted">Địa chỉ chi tiết</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editAddress"
+                  name="address"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="fw-bold small text-muted"
+                  >Khu vực (GHN) (*)</label
+                >
+                <div class="row g-2">
+                  <div class="col-md-4">
+                    <select
+                      class="form-select"
+                      id="editProvince"
+                      onchange="loadDistricts(this.value, 'editDistrict', 'editWard')"
+                      required
+                    >
+                      <option value="">-- Tỉnh --</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select
+                      class="form-select"
+                      id="editDistrict"
+                      onchange="loadWards(this.value, 'editWard')"
+                      required
+                    >
+                      <option value="">-- Quận --</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-select" id="editWard" required>
+                      <option value="">-- Xã --</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="fw-bold small text-muted">Loại hình</label>
+                  <select
+                    class="form-select"
+                    id="editCategory"
+                    name="category_id"
+                    required
+                  ></select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="fw-bold small text-muted"
+                    >Số điện thoại (*)</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editPhone"
+                    name="phone"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="fw-bold small text-muted"
+                  >Hình ảnh (Để trống nếu không đổi)</label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="editImage"
+                  name="image"
+                  accept="image/*"
+                  onchange="previewImageEdit(this)"
+                />
+                <div
+                  class="mt-2 text-center"
+                  id="previewContainerEdit"
+                  style="display: none"
+                >
+                  <img
+                    id="previewImageEdit"
+                    src=""
+                    style="
+                      max-height: 150px;
+                      border-radius: 8px;
+                      border: 1px solid #ddd;
+                    "
+                  />
+                </div>
+              </div>
+              <div class="text-end mt-4">
+                <button
+                  type="button"
+                  class="btn btn-light me-2"
+                  data-bs-dismiss="modal"
+                >
+                  Hủy
+                </button>
+                <button type="submit" class="btn btn-primary px-4">
+                  Lưu thay đổi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-orders" class="content-view">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold">Quản lý Đơn hàng</h5>
+        <div class="d-flex gap-2">
+          <select
+            class="form-select form-select-sm"
+            style="width: 150px"
+            onchange="filterOrders(this.value)"
+          >
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ xử lý</option>
+            <option value="completed">Hoàn thành</option>
+            <option value="cancelled">Đã hủy</option>
+          </select>
+        </div>
+      </div>
+      <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+          <table class="table custom-table mb-0 align-middle">
+            <thead>
+              <tr>
+                <th>Mã đơn</th>
+                <th>Khách hàng</th>
+                <th>Cửa hàng</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="view-users" class="content-view">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold">Quản lý Người dùng</h5>
+        <div class="search-box">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text bg-white border-end-0"
+              ><i class="fas fa-search text-muted"></i
+            ></span>
+            <input
+              type="text"
+              class="form-control border-start-0"
+              placeholder="Tìm người dùng..."
+              onkeyup="searchUsers(this.value)"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+          <table class="table custom-table mb-0 align-middle">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th>Ngày tham gia</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/admin.js"></script>
+    <script>
+      function previewImageAdd(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            document.getElementById("previewImage").src = e.target.result;
+            document.getElementById("previewContainer").style.display = "block";
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    </script>
+  </body>
+</html>

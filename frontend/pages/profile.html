@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hồ sơ người dùng | DD-Food</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/profile.css" />
+
+    <style>
+      /* --- BACKGROUND & LAYOUT --- */
+      body {
+        background-color: #f8f9fa;
+      }
+      .profile-wrapper {
+        max-width: 1200px;
+        margin: 30px auto;
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 25px;
+        padding: 0 15px;
+        min-height: 80vh;
+      }
+
+      /* --- SIDEBAR MENU --- */
+      .profile-sidebar {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        height: fit-content;
+      }
+      .user-card {
+        text-align: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 15px;
+      }
+      .user-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #0d6efd;
+        margin-bottom: 10px;
+      }
+      .menu-btn {
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 8px;
+        color: #666;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .menu-btn i {
+        width: 30px;
+      }
+      .menu-btn:hover {
+        background-color: #f0f7ff;
+        color: #0d6efd;
+      }
+
+      /* Active State với hiệu ứng trượt */
+      .menu-btn.active {
+        background-color: #e6f2ff;
+        color: #0d6efd;
+        font-weight: 600;
+        transform: translateX(5px);
+      }
+
+      /* --- MAIN CONTENT & MORPH EFFECT --- */
+      .profile-content {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Ẩn các tab không active */
+      .tab-panel {
+        display: none;
+      }
+
+      /* Hiệu ứng Morph: Fade In + Slide Up */
+      .tab-panel.active {
+        display: block;
+        animation: morphIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes morphIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px) scale(0.98);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* Form Input đẹp hơn */
+      .custom-input {
+        background-color: #f9f9f9;
+        border: 1px solid #eee;
+        padding: 12px;
+        border-radius: 8px;
+        width: 100%;
+        transition: 0.3s;
+      }
+      .custom-input:focus {
+        background-color: #fff;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="header-placeholder">
+      <nav class="navbar navbar-light bg-white shadow-sm">
+        <div class="container">
+          <a class="navbar-brand fw-bold text-primary" href="../index.html"
+            >DD-FOOD</a
+          >
+          <div class="d-flex align-items-center">
+            <span class="me-2">Chào, <b id="header-username">...</b></span>
+            <img
+              src="assets/img/avatar.jpg"
+              class="rounded-circle"
+              width="35"
+              height="35"
+            />
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="profile-wrapper">
+      <aside class="profile-sidebar">
+        <div class="user-card">
+          <img
+            src="https://ui-avatars.com/api/?name=User&background=0D6EFD&color=fff"
+            id="profile-avatar"
+            class="user-avatar"
+            alt="Avatar"
+          />
+          <h6 id="sidebar-name" class="fw-bold mb-0">Đang tải...</h6>
+          <small class="text-muted">Thành viên</small>
+        </div>
+        <nav>
+          <button
+            class="menu-btn active"
+            onclick="ProfileApp.switchTab('info', this)"
+          >
+            <i class="fa-regular fa-user"></i> Thông tin tài khoản
+          </button>
+          <button
+            class="menu-btn"
+            onclick="ProfileApp.switchTab('address', this)"
+          >
+            <i class="fa-solid fa-map-location-dot"></i> Sổ địa chỉ
+          </button>
+          <a
+            href="tracking.html"
+            class="btn-checkout"
+            style="
+              text-decoration: none;
+              display: inline-block;
+              text-align: center;
+            "
+          >
+            Đơn mua
+          </a>
+          <hr style="opacity: 0.1" />
+          <button class="menu-btn text-danger" onclick="ProfileApp.logout()">
+            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+          </button>
+        </nav>
+      </aside>
+
+      <main class="profile-content">
+        <div id="tab-info" class="tab-panel active">
+          <h4 class="mb-4 fw-bold">Hồ sơ của tôi</h4>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label class="form-label fw-bold small text-muted"
+                  >Họ và tên</label
+                >
+                <input type="text" id="inp-fullname" class="custom-input" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold small text-muted">Email</label>
+                <input
+                  type="email"
+                  id="inp-email"
+                  class="custom-input"
+                  disabled
+                  style="background: #e9ecef"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold small text-muted"
+                  >Số điện thoại</label
+                >
+                <input type="text" id="inp-phone" class="custom-input" />
+              </div>
+              <button
+                onclick="ProfileApp.updateProfile()"
+                class="btn btn-primary px-4 py-2 mt-2"
+              >
+                Lưu thay đổi
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-address" class="tab-panel">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold mb-0">Địa chỉ của tôi</h4>
+
+            <button
+              class="btn btn-primary btn-sm"
+              onclick="ProfileApp.openAddModal()"
+            >
+              Thêm địa chỉ
+            </button>
+          </div>
+          <div id="address-list-container"></div>
+        </div>
+
+        <div id="tab-orders" class="tab-panel">
+          <h4 class="fw-bold mb-4">Lịch sử đơn hàng</h4>
+          <div class="text-center py-5">
+            <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+            <p class="text-muted">Bạn chưa có đơn hàng nào.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal fade" id="addressModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Thêm địa chỉ mới</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="form-add-address">
+              <div class="row mb-3">
+                <div class="col-6">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="addr-name"
+                    placeholder="Tên người nhận"
+                  />
+                </div>
+                <div class="col-6">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="addr-phone"
+                    placeholder="Số điện thoại"
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small text-muted"
+                  >Tỉnh/Thành phố</label
+                >
+                <select
+                  id="ghn-province"
+                  class="form-select"
+                  onchange="GHNService.loadDistricts(this.value)"
+                >
+                  <option value="">Chọn Tỉnh/Thành</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small text-muted">Quận/Huyện</label>
+                <select
+                  id="ghn-district"
+                  class="form-select"
+                  onchange="GHNService.loadWards(this.value)"
+                  disabled
+                >
+                  <option value="">Chọn Quận/Huyện</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label small text-muted">Phường/Xã</label>
+                <select id="ghn-ward" class="form-select" disabled>
+                  <option value="">Chọn Phường/Xã</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small text-muted"
+                  >Địa chỉ cụ thể</label
+                >
+                <input
+                  type="text"
+                  id="addr-specific"
+                  class="form-control"
+                  placeholder="Số nhà, tên đường..."
+                />
+              </div>
+
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="addr-default"
+                />
+                <label class="form-check-label" for="addr-default"
+                  >Đặt làm địa chỉ mặc định</label
+                >
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Hủy
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="ProfileApp.handleSaveAddress()"
+            >
+              Lưu địa chỉ
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/profile.js"></script>
+    <script src="../assets/js/location.js"></script>
+  </body>
+</html>

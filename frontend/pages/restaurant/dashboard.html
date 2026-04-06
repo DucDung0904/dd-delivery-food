@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý Cửa hàng - DD Food</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../assets/css/restaurant.css" />
+
+    <style>
+      /* --- Custom Styles for Order Tabs --- */
+      #orderTabs .nav-link {
+        border-radius: 8px;
+        color: #6c757d;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      #orderTabs .nav-link:hover {
+        background-color: #f8f9fa;
+      }
+      #orderTabs .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+        box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+      }
+      /* Badge Styling */
+      .badge {
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="brand"><i class="fas fa-store"></i> MY STORE</div>
+
+      <div class="nav-item">
+        <a class="nav-link" onclick="switchTab('overview')" id="nav-overview">
+          <i class="fas fa-chart-pie"></i> Tổng quan
+        </a>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link active" onclick="switchTab('menu')" id="nav-menu">
+          <i class="fas fa-utensils"></i> Thực đơn
+        </a>
+      </div>
+
+      <div class="nav-item">
+        <a class="nav-link" onclick="switchTab('orders')" id="nav-orders">
+          <i class="fas fa-receipt"></i> Đơn hàng
+        </a>
+      </div>
+
+      <div class="nav-item">
+        <a
+          class="nav-link"
+          onclick="switchTab('shippers'); ShipperManager.loadShippers()"
+          id="nav-shippers"
+        >
+          <i class="fas fa-motorcycle"></i> Quản lý Shipper
+        </a>
+      </div>
+
+      <div class="mt-auto">
+        <a class="nav-link" onclick="switchTab('settings')" id="nav-settings">
+          <i class="fas fa-cog"></i> Cài đặt
+        </a>
+        <a class="nav-link logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Đăng xuất
+        </a>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="top-header">
+        <div class="page-title">
+          <h2 id="page-heading"></h2>
+          <p class="text-muted m-0 small">
+            Chào mừng trở lại,
+            <span class="shop-name fw-bold text-dark">...</span>
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <div class="status-badge me-3">
+            <div class="form-check form-switch m-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="headerStatusSwitch"
+                onchange="quickToggleStatus(this)"
+              />
+              <label
+                class="form-check-label small fw-bold"
+                for="headerStatusSwitch"
+                id="headerStatusLabel"
+                >Đóng cửa</label
+              >
+            </div>
+          </div>
+
+          <div class="user-profile">
+            <div class="text-end me-2 d-none d-md-block">
+              <div class="fw-bold small shop-name">...</div>
+              <div class="text-muted" style="font-size: 11px">Chủ cửa hàng</div>
+            </div>
+            <img
+              src="../../assets/images/default-avatar.png"
+              class="user-avatar"
+              id="shop-avatar"
+              onerror="this.src='https://via.placeholder.com/40'"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-menu" class="content-section">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+          <div class="sub-nav-container">
+            <div
+              class="sub-nav-item active"
+              onclick="switchMenuSubTab('list')"
+              id="sub-tab-list"
+            >
+              <i class="fas fa-list-ul"></i> Danh sách món
+            </div>
+            <div
+              class="sub-nav-item"
+              onclick="switchMenuSubTab('category')"
+              id="sub-tab-category"
+            >
+              <i class="fas fa-tags"></i> Quản lý Danh mục
+            </div>
+          </div>
+          <button
+            class="btn btn-primary fw-bold shadow-sm px-4 py-2 rounded-3"
+            onclick="showAddProductForm()"
+          >
+            <i class="fas fa-plus me-2"></i> Thêm món mới
+          </button>
+        </div>
+
+        <div id="view-product-list">
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="modern-card p-3">
+                <h6 class="text-muted small fw-bold">TỔNG MÓN</h6>
+                <h2 class="fw-bold m-0" id="stat-total-products">0</h2>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="modern-card p-3">
+                <h6 class="text-muted small fw-bold">ĐANG BÁN</h6>
+                <h2 class="fw-bold text-success m-0" id="stat-active-products">
+                  0
+                </h2>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="modern-card p-3">
+                <h6 class="text-muted small fw-bold">DANH MỤC</h6>
+                <h2 class="fw-bold text-primary m-0" id="stat-categories">0</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <div
+              class="d-flex justify-content-between align-items-center mb-3 px-2"
+            >
+              <h5 class="fw-bold m-0">Thực đơn hiện tại</h5>
+              <button
+                class="btn btn-light border btn-sm"
+                onclick="loadProducts()"
+              >
+                <i class="fas fa-sync-alt"></i>
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-custom align-middle">
+                <thead>
+                  <tr>
+                    <th width="60">Ảnh</th>
+                    <th>Tên món</th>
+                    <th>Danh mục</th>
+                    <th>Giá</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="product-list-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="view-add-product" style="display: none">
+          <div class="d-flex align-items-center mb-3">
+            <button
+              class="btn btn-light border me-3"
+              onclick="switchMenuSubTab('list')"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <h4 class="fw-bold m-0">Thêm món mới</h4>
+          </div>
+          <form id="addProductForm" class="row g-4">
+            <div class="col-lg-8">
+              <div class="card border-0 shadow-sm p-4">
+                <div class="mb-3">
+                  <label class="form-label fw-bold small">Tên món (*)</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="name"
+                    required
+                  />
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold small">Danh mục (*)</label>
+                    <select
+                      class="form-select"
+                      name="category_id"
+                      id="formCategorySelect"
+                      required
+                    ></select>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold small">Giá bán (*)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      name="price"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-bold small">Mô tả</label>
+                  <textarea
+                    class="form-control"
+                    name="description"
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card border-0 shadow-sm p-4 text-center">
+                <h6 class="fw-bold mb-3">Hình ảnh</h6>
+                <div
+                  class="image-upload-box mb-3"
+                  onclick="document.getElementById('productImageInput').click()"
+                >
+                  <input
+                    type="file"
+                    name="image"
+                    id="productImageInput"
+                    hidden
+                    accept="image/*"
+                    onchange="previewImage(this)"
+                  />
+                  <img
+                    id="imgPreview"
+                    class="image-preview"
+                    style="
+                      display: none;
+                      width: 100%;
+                      height: 100%;
+                      object-fit: cover;
+                    "
+                  />
+                  <div id="uploadPlaceholder">
+                    <i class="fas fa-cloud-upload-alt fs-1 text-muted"></i>
+                  </div>
+                </div>
+                <div class="form-check form-switch text-start">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="is_active"
+                    id="activeSwitch"
+                    checked
+                  />
+                  <label class="form-check-label" for="activeSwitch"
+                    >Đang mở bán</label
+                  >
+                </div>
+                <hr />
+                <button
+                  type="button"
+                  class="btn btn-primary w-100 fw-bold"
+                  onclick="submitAddProduct()"
+                >
+                  Lưu món ăn
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div id="view-category" style="display: none">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-3">Thêm danh mục</h5>
+                <form id="addCategoryForm">
+                  <input
+                    type="text"
+                    class="form-control mb-3"
+                    id="newCategoryName"
+                    placeholder="Tên danh mục..."
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-primary w-100"
+                    onclick="submitAddCategory()"
+                  >
+                    Thêm mới
+                  </button>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card border-0 shadow-sm p-4">
+                <h5 class="fw-bold mb-3">Danh sách</h5>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Tên</th>
+                      <th class="text-end">Xóa</th>
+                    </tr>
+                  </thead>
+                  <tbody id="category-list-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-orders" class="content-section" style="display: none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h4 class="fw-bold m-0">Quản lý Đơn hàng</h4>
+            <p class="text-muted small m-0">Tự động cập nhật sau mỗi 10 giây</p>
+          </div>
+        </div>
+
+        <div class="card mb-4 shadow-sm border-0">
+          <div class="card-body p-2 bg-white rounded">
+            <ul class="nav nav-pills nav-fill gap-2" id="orderTabs">
+              <li class="nav-item">
+                <button
+                  class="nav-link active fw-bold d-flex align-items-center justify-content-center py-2"
+                  onclick="OrderManager.switchTab('new', this)"
+                >
+                  <i class="fas fa-bell me-2"></i>Đơn mới
+                  <span
+                    id="badge-new"
+                    class="badge bg-danger rounded-pill ms-2 shadow-sm"
+                    style="display: none"
+                    >0</span
+                  >
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="nav-link fw-bold d-flex align-items-center justify-content-center py-2 text-dark"
+                  onclick="OrderManager.switchTab('processing', this)"
+                >
+                  <i class="fas fa-fire me-2 text-warning"></i>Đang làm
+                  <span
+                    id="badge-processing"
+                    class="badge bg-warning text-dark rounded-pill ms-2"
+                    style="display: none"
+                    >0</span
+                  >
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="nav-link fw-bold d-flex align-items-center justify-content-center py-2 text-dark"
+                  onclick="OrderManager.switchTab('shipping', this)"
+                >
+                  <i class="fas fa-motorcycle me-2 text-primary"></i>Đang giao
+                  <span
+                    id="badge-shipping"
+                    class="badge bg-primary rounded-pill ms-2"
+                    style="display: none"
+                    >0</span
+                  >
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  class="nav-link fw-bold d-flex align-items-center justify-content-center py-2 text-secondary"
+                  onclick="OrderManager.switchTab('history', this)"
+                >
+                  <i class="fas fa-history me-2"></i>Lịch sử
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+          <div
+            class="card-header bg-white py-3 d-flex justify-content-between align-items-center"
+          >
+            <h6 class="m-0 fw-bold text-primary">
+              <i class="fas fa-list-alt me-2"></i>Danh sách đơn hàng
+            </h6>
+            <button
+              class="btn btn-sm btn-light border shadow-sm"
+              onclick="OrderManager.loadOrders()"
+              title="Tải lại dữ liệu"
+            >
+              <i class="fas fa-sync-alt text-primary"></i> Làm mới
+            </button>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light text-secondary small text-uppercase">
+                  <tr>
+                    <th class="ps-3">Mã đơn</th>
+                    <th style="width: 25%">Khách hàng</th>
+                    <th style="width: 30%">Món đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end pe-3">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="order-list-body">
+                  <tr>
+                    <td colspan="6" class="text-center py-5">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p class="text-muted mt-2 small">Đang tải dữ liệu...</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="tab-shippers"
+        class="content-section"
+        style="display: none; background-color: #f8f9fa"
+      >
+        <div class="container-fluid px-0">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h4 class="fw-bold m-0">Đội ngũ Giao hàng</h4>
+              <p class="text-muted small m-0">
+                Quản lý nhân viên giao hàng nội bộ của quán
+              </p>
+            </div>
+            <button
+              class="btn btn-primary fw-bold shadow-sm"
+              onclick="ShipperManager.showAddModal()"
+            >
+              <i class="fas fa-plus me-2"></i> Thêm Shipper
+            </button>
+          </div>
+
+          <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="bg-light">
+                    <tr>
+                      <th class="ps-4 py-3">Tên Shipper</th>
+                      <th>Số điện thoại</th>
+                      <th>Trạng thái</th>
+                      <th class="text-end pe-4">Hành động</th>
+                    </tr>
+                  </thead>
+                  <tbody id="shipper-list-body">
+                    <tr>
+                      <td colspan="4" class="text-center py-4 text-muted">
+                        Đang tải danh sách...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="tab-settings"
+        class="content-section"
+        style="display: none; background-color: #f8f9fa"
+      >
+        <div
+          class="sticky-top bg-white border-bottom shadow-sm px-4 py-3 mb-4 d-flex justify-content-between align-items-center"
+          style="z-index: 100"
+        >
+          <div>
+            <h5 class="fw-bold m-0 text-dark">Cài đặt Cửa hàng</h5>
+            <small class="text-muted"
+              >Quản lý thông tin & Trạng thái hoạt động</small
+            >
+          </div>
+          <button
+            type="button"
+            id="btnSaveSettings"
+            class="btn btn-primary fw-bold px-4 shadow-sm"
+            onclick="saveStoreProfile()"
+          >
+            <i class="fas fa-save me-2"></i> Lưu thay đổi
+          </button>
+        </div>
+
+        <div class="container-fluid px-4 pb-5">
+          <form id="storeProfileForm">
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <div
+                  class="card border-0 shadow-sm rounded-3 mb-4 card-status-accent"
+                >
+                  <div class="card-body p-4">
+                    <h6 class="fw-bold text-dark mb-3 text-uppercase small">
+                      Trạng thái hoạt động
+                    </h6>
+                    <div class="text-center mb-4">
+                      <span
+                        id="realtimeStatusBadge"
+                        class="badge rounded-pill px-4 py-2 fs-6 shadow-sm bg-secondary"
+                        >Checking...</span
+                      >
+                      <div class="small text-muted mt-2" id="statusHelperText">
+                        ...
+                      </div>
+                    </div>
+                    <div
+                      class="bg-light rounded-3 p-3 d-flex justify-content-between align-items-center border"
+                    >
+                      <div>
+                        <span class="fw-bold text-dark">Nhận đơn hàng</span>
+                        <div class="small text-muted" style="font-size: 11px">
+                          Gạt tắt để tạm ngưng phục vụ
+                        </div>
+                      </div>
+                      <div class="form-check form-switch m-0">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="storeStatusToggle"
+                          style="width: 50px; height: 26px; cursor: pointer"
+                          onchange="toggleStoreStatus()"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="card border-0 shadow-sm rounded-3 card-media-accent"
+                >
+                  <div class="card-body text-center p-4">
+                    <h6
+                      class="fw-bold text-dark mb-4 text-start text-uppercase small"
+                    >
+                      Logo Thương hiệu
+                    </h6>
+                    <div
+                      class="position-relative d-inline-block profile-image-wrapper"
+                    >
+                      <img
+                        id="settingLogoPreview"
+                        src="../../assets/images/default-store.png"
+                        class="rounded-circle border shadow-sm"
+                        style="width: 150px; height: 150px; object-fit: cover"
+                      />
+                      <label
+                        class="btn btn-white border shadow-sm rounded-circle position-absolute bottom-0 end-0 btn-upload-float"
+                        onclick="document.getElementById('uploadLogoInput').click()"
+                        style="
+                          width: 40px;
+                          height: 40px;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          cursor: pointer;
+                        "
+                      >
+                        <i class="fas fa-camera text-primary"></i>
+                      </label>
+                      <input
+                        type="file"
+                        id="uploadLogoInput"
+                        name="image"
+                        hidden
+                        accept="image/*"
+                        onchange="previewSettingImage(this, 'settingLogoPreview')"
+                      />
+                    </div>
+                    <p class="text-muted small mt-3">
+                      Nhấn vào icon máy ảnh để đổi logo
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-8">
+                <div
+                  class="card border-0 shadow-sm rounded-3 h-100 card-info-accent"
+                >
+                  <div class="card-body p-4">
+                    <h6 class="fw-bold text-dark mb-4 text-uppercase small">
+                      Thông tin chi tiết
+                    </h6>
+                    <div class="row g-4">
+                      <div class="col-12">
+                        <label class="form-label fw-bold small text-muted"
+                          >Tên cửa hàng
+                          <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="text"
+                          class="form-control fw-bold"
+                          id="setStoreName"
+                          name="name"
+                          required
+                        />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted"
+                          >Số điện thoại (Tài khoản)</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="setStorePhone"
+                          name="phone"
+                          readonly
+                          style="background-color: #f0f0f0"
+                        />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted"
+                          >Giờ mở cửa (Hiển thị)</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="setStoreOpenTime"
+                          name="open_time"
+                          placeholder="VD: 07:00 - 22:00"
+                        />
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label fw-bold small text-muted"
+                          >Địa chỉ kinh doanh</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="setStoreAddress"
+                          name="address"
+                        />
+                      </div>
+                      <div class="col-12">
+                        <label class="form-label fw-bold small text-muted"
+                          >Mô tả / Giới thiệu</label
+                        >
+                        <textarea
+                          class="form-control"
+                          id="setStoreDesc"
+                          name="description"
+                          rows="5"
+                        ></textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="editProductModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div
+          class="modal-content border-0 shadow-lg"
+          style="border-radius: 20px; overflow: hidden"
+        >
+          <div class="modal-body p-0">
+            <form id="editProductForm">
+              <input type="hidden" name="product_id" id="editProdId" />
+              <div class="row g-0">
+                <div
+                  class="col-md-5 bg-dark text-white d-flex flex-column justify-content-center align-items-center p-4"
+                >
+                  <img
+                    id="editImgPreview"
+                    src=""
+                    class="rounded-circle border border-3 border-white shadow mb-3"
+                    style="width: 150px; height: 150px; object-fit: cover"
+                  />
+                  <label
+                    class="btn btn-sm btn-light rounded-pill mb-3"
+                    onclick="document.getElementById('editImgInput').click()"
+                  >
+                    <i class="fas fa-camera me-1"></i> Đổi ảnh
+                  </label>
+                  <input
+                    type="file"
+                    name="image"
+                    id="editImgInput"
+                    hidden
+                    onchange="previewEditImage(this)"
+                  />
+                  <h5 id="displayEditName" class="fw-bold text-center">...</h5>
+                  <span id="displayEditCat" class="badge bg-light text-dark"
+                    >...</span
+                  >
+                </div>
+                <div class="col-md-7 p-4 bg-white">
+                  <div class="d-flex justify-content-between mb-3">
+                    <h5 class="fw-bold">Chi tiết món</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                    ></button>
+                  </div>
+                  <div class="mb-2">
+                    <label class="small fw-bold">Tên món</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="editName"
+                      name="name"
+                      oninput="document.getElementById('displayEditName').textContent=this.value"
+                    />
+                  </div>
+                  <div class="row mb-2">
+                    <div class="col-6">
+                      <label class="small fw-bold">Danh mục</label>
+                      <select
+                        class="form-select"
+                        id="editCategory"
+                        name="category_id"
+                      ></select>
+                    </div>
+                    <div class="col-6">
+                      <label class="small fw-bold">Giá</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="editPrice"
+                        name="price"
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="small fw-bold">Mô tả</label>
+                    <textarea
+                      class="form-control"
+                      id="editDesc"
+                      name="description"
+                      rows="2"
+                    ></textarea>
+                  </div>
+                  <div class="form-check form-switch mb-3 bg-light p-2 rounded">
+                    <input
+                      class="form-check-input ms-0 me-2"
+                      type="checkbox"
+                      id="editActive"
+                      name="is_active"
+                      value="1"
+                    />
+                    <label class="form-check-label fw-bold" for="editActive"
+                      >Đang kinh doanh</label
+                    >
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button
+                      type="button"
+                      class="btn btn-outline-danger"
+                      onclick="deleteProductFromEdit()"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary flex-grow-1 fw-bold"
+                      onclick="submitEditProduct()"
+                    >
+                      Lưu thay đổi
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="addShipperModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Thêm Shipper Mới</h5>
+            <button
+              type="button"
+              class="btn-close"
+              onclick="document.getElementById('addShipperModal').style.display='none'"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Họ và tên (*)</label>
+              <input
+                type="text"
+                id="newShipperName"
+                class="form-control"
+                placeholder="Ví dụ: Nguyễn Văn A"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Số điện thoại (*)</label>
+              <input
+                type="text"
+                id="newShipperPhone"
+                class="form-control"
+                placeholder="Ví dụ: 0901234567"
+              />
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button
+              type="button"
+              class="btn btn-light"
+              data-bs-dismiss="modal"
+              onclick="document.getElementById('addShipperModal').style.display='none'"
+            >
+              Hủy
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary fw-bold"
+              onclick="ShipperManager.addShipper()"
+            >
+              Lưu thông tin
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="assignShipperModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content border-0 shadow-lg"
+          style="border-radius: 16px"
+        >
+          <div class="modal-header border-bottom-0">
+            <h5 class="modal-title fw-bold">Chọn người giao hàng</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="assignOrderId" />
+            <div class="text-center mb-4">
+              <div
+                class="avatar-circle bg-light d-inline-flex align-items-center justify-content-center mb-3"
+                style="width: 60px; height: 60px; border-radius: 50%"
+              >
+                <i class="fas fa-shipping-fast text-primary fs-3"></i>
+              </div>
+              <p class="text-muted">
+                Vui lòng chọn nhân viên để giao đơn hàng này
+              </p>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted text-uppercase"
+                >Danh sách Shipper</label
+              >
+              <select
+                class="form-select form-select-lg"
+                id="shipperSelect"
+                style="font-size: 14px"
+              >
+                <option value="">-- Đang tải danh sách... --</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer border-0 justify-content-center pb-4">
+            <button
+              type="button"
+              class="btn btn-light px-4"
+              data-bs-dismiss="modal"
+            >
+              Hủy bỏ
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary px-4 fw-bold shadow-sm"
+              onclick="OrderManager.submitAssignShipper()"
+            >
+              <i class="fas fa-paper-plane me-2"></i> Xác nhận giao
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="orderDetailModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title fw-bold">
+              Chi tiết đơn #<span
+                id="detail-order-id"
+                class="text-primary"
+              ></span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row mb-3 border-bottom pb-3">
+              <div class="col-12">
+                <p class="mb-1">
+                  <i class="fas fa-user me-2 text-secondary"></i
+                  ><strong id="detail-customer"></strong>
+                </p>
+                <p class="mb-1">
+                  <i class="fas fa-phone me-2 text-secondary"></i
+                  ><span id="detail-phone"></span>
+                </p>
+                <p class="mb-1">
+                  <i class="fas fa-map-marker-alt me-2 text-danger"></i
+                  ><span id="detail-address"></span>
+                </p>
+                <div
+                  class="alert alert-warning p-2 mt-2 mb-0 d-flex align-items-start"
+                >
+                  <i class="fas fa-sticky-note me-2 mt-1"></i>
+                  <div>
+                    <strong>Ghi chú:</strong>
+                    <span id="detail-note">Không có</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h6 class="fw-bold text-dark mb-2">Danh sách món ăn</h6>
+            <div
+              id="detail-items-list"
+              class="bg-light p-2 rounded mb-3"
+              style="max-height: 200px; overflow-y: auto"
+            ></div>
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted">Tiền món:</span>
+              <span id="detail-subtotal" class="fw-bold"></span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Phí vận chuyển:</span>
+              <span id="detail-ship"></span>
+            </div>
+            <div
+              class="border-top pt-2 d-flex justify-content-between align-items-center"
+            >
+              <span class="fs-5 fw-bold">Tổng thanh toán:</span>
+              <span id="detail-total" class="fs-4 fw-bold text-primary"></span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary w-100"
+              data-bs-dismiss="modal"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="confirmCompleteModal"
+      tabindex="-1"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div
+          class="modal-content text-center border-0 shadow-lg p-3"
+          style="border-radius: 16px"
+        >
+          <div class="modal-body">
+            <div class="mb-3 text-success">
+              <i class="fas fa-check-circle fa-4x"></i>
+            </div>
+            <h5 class="fw-bold text-dark">Xác nhận hoàn thành?</h5>
+            <p class="text-muted small mb-4">
+              Đơn hàng đã được giao và bạn đã nhận đủ tiền?
+            </p>
+            <div class="d-flex gap-2 justify-content-center">
+              <button
+                type="button"
+                class="btn btn-light w-50 fw-bold"
+                onclick="OrderManager.cancelSwipeCompletion()"
+              >
+                Quay lại
+              </button>
+              <button
+                type="button"
+                class="btn btn-success w-50 fw-bold text-white shadow-sm"
+                onclick="OrderManager.confirmSwipeCompletion()"
+              >
+                Hoàn thành
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/js/restaurant.js"></script>
+    <script src="../../assets/js/restaurant_orders.js"></script>
+    <script src="../../assets/js/shipper_manager.js"></script>
+  </body>
+</html>

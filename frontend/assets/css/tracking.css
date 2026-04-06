@@ -1,0 +1,530 @@
+/* FILE: assets/css/tracking.css */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+
+:root {
+  --primary-color: #6c5ce7;
+  --secondary-color: #a29bfe;
+  --accent-color: #fd79a8;
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* --- HIỆU ỨNG NỀN ĐỘNG (BACKGROUND BLOBS) --- */
+.bg-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(60px);
+  z-index: -1;
+  animation: float 10s infinite ease-in-out alternate;
+}
+.blob-1 {
+  width: 300px;
+  height: 300px;
+  background: #a29bfe;
+  top: -50px;
+  left: -50px;
+}
+.blob-2 {
+  width: 250px;
+  height: 250px;
+  background: #fd79a8;
+  bottom: 50px;
+  right: -50px;
+  animation-delay: -5s;
+}
+.blob-3 {
+  width: 200px;
+  height: 200px;
+  background: #81ecec;
+  top: 40%;
+  left: 30%;
+  opacity: 0.6;
+  animation-duration: 15s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(30px, 50px);
+  }
+}
+
+/* --- GLASS CARD --- */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(31, 38, 135, 0.2);
+}
+
+/* --- NAVBAR GLASS --- */
+.navbar-glass {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* --- TABS --- */
+.nav-pills .nav-link {
+  color: #636e72;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 10px 25px;
+  transition: all 0.3s;
+}
+.nav-pills .nav-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+}
+
+/* --- STEPPER (THANH TIẾN TRÌNH) --- */
+.stepper-wrapper {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Đường kẻ nền */
+.stepper-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #dfe6e9;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+/* Thanh tiến trình chạy (Màu xanh) */
+.stepper-progress-bar {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #00b894, #55efc4);
+  border-radius: 10px;
+  z-index: 2;
+  transition: width 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Hiệu ứng nảy */
+}
+
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  z-index: 3;
+}
+
+.step-counter {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #dfe6e9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #b2bec3;
+  transition: all 0.4s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.step-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b2bec3;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Active & Completed States */
+.stepper-item.completed .step-counter {
+  background: #00b894;
+  border-color: #00b894;
+  color: #fff;
+  transform: scale(1.1);
+}
+.stepper-item.completed .step-name {
+  color: #00b894;
+}
+
+.stepper-item.active .step-counter {
+  background: #fff;
+  border-color: #0984e3;
+  color: #0984e3;
+  box-shadow: 0 0 0 4px rgba(9, 132, 227, 0.2);
+  transform: scale(1.2);
+  animation: pulse 2s infinite;
+}
+.stepper-item.active .step-name {
+  color: #0984e3;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(9, 132, 227, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(9, 132, 227, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(9, 132, 227, 0);
+  }
+}
+
+.res-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.price-tag {
+  background: linear-gradient(135deg, #ff7675, #d63031);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(214, 48, 49, 0.3);
+}
+
+/* --- [THÊM VÀO CUỐI FILE] --- */
+
+/* Timeline Lộ trình (Dọc) */
+.route-timeline {
+  position: relative;
+  padding-left: 25px;
+  margin: 15px 0;
+}
+/* Đường kẻ dọc nối 2 điểm */
+.route-timeline::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 8px;
+  bottom: 20px;
+  width: 2px;
+  background-color: #e0e0e0;
+  z-index: 0;
+}
+.route-point {
+  position: relative;
+  margin-bottom: 12px;
+  z-index: 1;
+}
+.route-point i {
+  position: absolute;
+  left: -25px;
+  top: 4px;
+  width: 20px;
+  text-align: center;
+  background: #fff; /* Nền trắng đè lên đường kẻ */
+  color: #b2bec3;
+  z-index: 2;
+}
+/* Màu icon */
+.route-point i.fa-store {
+  color: #ff7675;
+} /* Màu đỏ cho Quán */
+.route-point i.fa-map-marker-alt {
+  color: #6c5ce7;
+} /* Màu tím cho Khách */
+
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Modal Header Gradient */
+.modal-header-custom {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: white;
+}
+/* ... (Giữ nguyên các phần cũ như body, glass-card...) ... */
+
+/* --- STEPPER (THANH TIẾN TRÌNH TRẠNG THÁI) --- */
+.stepper-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: relative;
+}
+/* Đường kẻ nền xám */
+.stepper-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #e9ecef;
+  z-index: 1;
+}
+/* Thanh màu xanh chạy theo tiến độ */
+.stepper-progress-bar {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  height: 3px;
+  background: #198754; /* Màu xanh success */
+  z-index: 2;
+  transition: width 0.5s ease;
+}
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  z-index: 3;
+}
+.step-counter {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #e9ecef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #adb5bd;
+  transition: all 0.3s;
+}
+.step-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #adb5bd;
+  text-transform: uppercase;
+}
+
+/* Trạng thái Active/Completed */
+.stepper-item.active .step-counter {
+  border-color: #198754;
+  color: #198754;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.2);
+}
+.stepper-item.completed .step-counter {
+  background: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+.stepper-item.active .step-name,
+.stepper-item.completed .step-name {
+  color: #198754;
+}
+
+/* --- TIMELINE LỘ TRÌNH (TỪ -> ĐẾN) --- */
+.route-timeline {
+  position: relative;
+  padding-left: 20px;
+  margin: 10px 0;
+}
+.route-timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 15px;
+  width: 2px;
+  background-color: #e9ecef;
+  z-index: 0;
+}
+.route-point {
+  position: relative;
+  margin-bottom: 8px;
+  z-index: 1;
+}
+.route-point i {
+  position: absolute;
+  left: -20px;
+  top: 4px;
+  width: 16px;
+  text-align: center;
+  background: #fff;
+}
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Modal Header */
+.modal-header-custom {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: white;
+}
+/* ... Code cũ giữ nguyên ... */
+
+/* --- NÚT CHỨC NĂNG --- */
+.action-btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  border-top: 1px dashed #e0e0e0;
+  padding-top: 15px;
+}
+.btn-action {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+/* Sao đánh giá */
+.rating-stars {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+.rating-stars i {
+  font-size: 24px;
+  color: #dfe6e9;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.rating-stars i.active {
+  color: #fdcb6e; /* Màu vàng */
+}
+
+/* ETA Badge */
+.eta-badge {
+  background: #e3f2fd;
+  color: #0984e3;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+/* Card Shipper Info (Thay thế nút gọi) */
+.shipper-mini-info {
+  background-color: #f0f9ff; /* Màu nền xanh nhạt */
+  border: 1px dashed #0d6efd;
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  margin-bottom: 0; /* Căn chỉnh với nút Chi tiết */
+  flex-grow: 1; /* Tự động giãn đầy khoảng trống */
+}
+
+.shipper-mini-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.shipper-mini-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.shipper-name {
+  font-weight: bold;
+  color: #0d6efd;
+}
+
+.shipper-phone {
+  color: #6c757d;
+  font-size: 11px;
+}
+/* Tăng kích thước chữ cho toàn bộ phần Tracking */
+.tracking-font-large {
+  font-size: 1.1rem; /* Tăng kích thước cơ bản */
+}
+
+/* Stepper Styles */
+.stepper-item {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  flex: 1;
+}
+.step-counter {
+  width: 40px; /* To hơn chút */
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  background: #fff;
+  border: 3px solid #dee2e6;
+  color: #adb5bd;
+}
+.step-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+/* Active State */
+.stepper-item.active .step-counter {
+  background-color: #198754; /* Màu xanh lá */
+  border-color: #198754;
+  color: #fff;
+}
+.stepper-item.active .step-name {
+  color: #198754;
+  font-weight: bold;
+}
